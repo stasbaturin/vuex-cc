@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div class="post" v-for="post of posts" :key="post.id">
+    <PostForm />
+    <h1>{{ postsCount }}</h1>
+    <div class="post" v-for="post of validPosts" :key="post.id">
       <h2>{{ post.title }}</h2>
       <p>{{ post.body }}</p>
     </div>
@@ -8,17 +10,17 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import PostForm from './components/PostForm';
 export default {
   name: 'App',
-  data() {
-    return {
-      posts: []
-    }
+  computed: mapGetters(['validPosts', 'postsCount']),
+  methods: mapActions(['fetchPosts']),
+  components: {
+    PostForm
   },
   async mounted() {
-    const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3')
-    const posts = await res.json()
-    this.posts = posts
+    this.fetchPosts()
   }
 }
 </script>
